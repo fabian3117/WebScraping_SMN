@@ -11,15 +11,12 @@ app.get('/', async (req, res) => {
     await context.overridePermissions("https://www.smn.gob.ar", ['geolocation']);
     const Lat=(req.query.Latitud===undefined)?-32.94682:req.query.Latitud; 
     const Long=(req.query.Longi===undefined)?-60.63932:req.query.Longi;
-    
-    //const Lat=-32.94682;
-    //const Long=-60.63932;
-    await page.setGeolocation({latitude:parseFloat(Lat), longitude:parseFloat(Long)});
+    await page.setGeolocation({latitude:parseFloat(Lat), longitude:parseFloat(Long)});  //-->   Establesco la ubicacion que me interesa <--
 
     await page.setViewport({ width: 1280, height: 1800 })
-    await page.setDefaultTimeout(0) //Wait Maximum amount of time for page to load
-    await page.setDefaultNavigationTimeout(0) //Wait Maximum amount of time for page to load
-    await page.goto("https://www.smn.gob.ar/", {waitUntil: 'load', timeout: 0})
+    await page.setDefaultTimeout(0) 
+    await page.setDefaultNavigationTimeout(0)
+    await page.goto("https://www.smn.gob.ar/", {waitUntil: 'load', timeout: 0})         //-->   Cargo la pagina del SMN <--
     const citi=await page.evaluate(()=> {
         return document.getElementById("citytitle").innerText;
     });
@@ -41,7 +38,7 @@ const Viento=await page.evaluate(()=> {
 const Visible=await page.evaluate(()=> {
     return document.getElementById("estado_visibility").innerText;
 });
-
+//-->   Retorno los datos relevantes en forma de un json    <--
 res.json({
     "Localidad":citi,
     "Temperatura":Temp,
@@ -55,5 +52,5 @@ res.json({
 });
 
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+    console.log(`Escuchando en el puerto : ${port}`)
   })
